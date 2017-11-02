@@ -6,7 +6,12 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.germanavalos.object.Venta;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -15,6 +20,8 @@ import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class Ventas extends JFrame {
@@ -28,6 +35,8 @@ public class Ventas extends JFrame {
 	private JRadioButton radioContado;
 	private JRadioButton radioTarjeta;
 	private JButton btnCalcular;
+	
+	private List<Venta> ventas = new ArrayList<>();
 
 	public Ventas() {
 		setTitle("Ventas");
@@ -64,6 +73,19 @@ public class Ventas extends JFrame {
 		contentPane.add(lblTotal);
 		
 		cbProductos = new JComboBox();
+		cbProductos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String pr = cbProductos.getSelectedItem().toString();
+				double precio = 0;
+				for (String[] valor : cargarArreglo()) {
+					if (valor[0].equals(pr)) {
+						precio = Double.parseDouble(valor[1]);
+					}
+				}
+				tfPrecio.setText(String.valueOf(precio));
+				vaciarConCombo();
+			}
+		});
 		cbProductos.setBounds(96, 11, 184, 20);
 		contentPane.add(cbProductos);
 		
@@ -94,6 +116,27 @@ public class Ventas extends JFrame {
 		tfTotal.setColumns(10);
 		
 		btnCalcular = new JButton("Calcular");
+		btnCalcular.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				double precio = Double.parseDouble(tfPrecio.getText());
+				int cantidad = Integer.parseInt(spCantidad.getValue().toString());
+				if (!verificarVacios()) {
+					if (cantidad != 0) {
+						double total = precio*cantidad;
+						if (radioContado.isSelected()) {
+							total = total - (total * 0.1);
+						}
+						else {
+							total = total + (total * 0.1);
+						}
+						tfTotal.setText(String.valueOf(total));
+					}
+				}
+				else {
+					System.out.println("sali");
+				}
+			}
+		});
 		btnCalcular.setBounds(187, 163, 93, 23);
 		contentPane.add(btnCalcular);
 		
@@ -109,10 +152,30 @@ public class Ventas extends JFrame {
 		contentPane.add(btnVolver);
 		
 		JButton btnVerTodos = new JButton("Ver Todos");
-		btnVerTodos.setBounds(96, 216, 93, 23);
+		btnVerTodos.setBounds(96, 216, 85, 23);
 		contentPane.add(btnVerTodos);
 		
 		JButton btnAgregar = new JButton("Agregar");
+		btnAgregar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				verificarVacios();
+				Venta venta = new Venta();
+				venta.setProducto(cbProductos.getSelectedItem().toString());
+				venta.setCantidad(Integer.parseInt(spCantidad.getValue().toString()));
+				if (radioTarjeta.isSelected()) {
+					venta.setPago("Tarjeta");
+				}
+				else {
+					venta.setPago("Contado");
+				}
+				venta.setPrecio(Double.parseDouble(tfPrecio.getText()));
+				venta.setTotal(Double.parseDouble(tfTotal.getText()));
+				
+				ventas.add(venta);
+				
+				JOptionPane.showMessageDialog(contentPane, "Se agrego correctamente");
+			}
+		});
 		btnAgregar.setBounds(191, 216, 89, 23);
 		contentPane.add(btnAgregar);
 		
@@ -142,4 +205,27 @@ public class Ventas extends JFrame {
 			cbProductos.addItem(productos[i][0]);
 		}
 	}
+	
+	public boolean verificarVacios() {
+		if (spCantidad.getValue().toString().equals("0")) {
+			JOptionPane.showMessageDialog(contentPane, "No ingreso una cantidad");
+			return true;
+		}
+		else if (!radioContado.isSelected() && !radioTarjeta.isSelected()) {
+			JOptionPane.showMessageDialog(contentPane, "No se ingreso un metodo de pago");
+			return true;
+		}
+		else if (radioContado.isSelected() || radioTarjeta.isSelected()) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	
+	public void vaciarConCombo() {
+		tfTotal.setText("");
+		spCantidad.setValue(0);
+	}
+	
 }

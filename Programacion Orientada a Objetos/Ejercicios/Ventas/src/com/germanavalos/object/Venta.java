@@ -6,16 +6,18 @@ public class Venta {
 	private double precio;
 	private int cantidad;
 	private String pago;
+	private double total;
 	
 	public Venta() {
 		
 	}
 	
-	public Venta(String producto, double precio, int cantidad, String pago) {
+	public Venta(String producto, double precio, int cantidad, String pago, double total) {
 		this.producto = producto;
 		this.precio = precio;
 		this.cantidad = cantidad;
 		this.pago = pago;
+		this.total = total;
 	}
 	
 	public String getProducto() {
@@ -48,6 +50,14 @@ public class Venta {
 	
 	public void setPago(String pago) {
 		this.pago = pago;
+	}
+	
+	public void setTotal(Double total) {
+		this.total = total;
+	}
+	
+	public Double getTotal() {
+		return total;
 	}
 	
 }
