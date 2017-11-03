@@ -118,23 +118,7 @@ public class Ventas extends JFrame {
 		btnCalcular = new JButton("Calcular");
 		btnCalcular.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				double precio = Double.parseDouble(tfPrecio.getText());
-				int cantidad = Integer.parseInt(spCantidad.getValue().toString());
-				if (!verificarVacios()) {
-					if (cantidad != 0) {
-						double total = precio*cantidad;
-						if (radioContado.isSelected()) {
-							total = total - (total * 0.1);
-						}
-						else {
-							total = total + (total * 0.1);
-						}
-						tfTotal.setText(String.valueOf(total));
-					}
-				}
-				else {
-					System.out.println("sali");
-				}
+				calcular();
 			}
 		});
 		btnCalcular.setBounds(187, 163, 93, 23);
@@ -152,28 +136,40 @@ public class Ventas extends JFrame {
 		contentPane.add(btnVolver);
 		
 		JButton btnVerTodos = new JButton("Ver Todos");
+		btnVerTodos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				VerTodas verTodas = new VerTodas(ventas);
+				verTodas.setVisible(true);
+				dispose();
+			}
+		});
 		btnVerTodos.setBounds(96, 216, 85, 23);
 		contentPane.add(btnVerTodos);
 		
 		JButton btnAgregar = new JButton("Agregar");
 		btnAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				verificarVacios();
-				Venta venta = new Venta();
-				venta.setProducto(cbProductos.getSelectedItem().toString());
-				venta.setCantidad(Integer.parseInt(spCantidad.getValue().toString()));
-				if (radioTarjeta.isSelected()) {
-					venta.setPago("Tarjeta");
+				if(!verificarVacios()) {
+					Venta venta = new Venta();
+					
+					venta.setProducto(cbProductos.getSelectedItem().toString());
+					venta.setCantidad(Integer.parseInt(spCantidad.getValue().toString()));
+					if (radioTarjeta.isSelected()) {
+						venta.setPago("Tarjeta");
+					}
+					else {
+						venta.setPago("Contado");
+					}
+					venta.setPrecio(Double.parseDouble(tfPrecio.getText()));
+					
+					calcular();
+					
+					venta.setTotal(Double.parseDouble(tfTotal.getText()));
+					
+					ventas.add(venta);
+					
+					JOptionPane.showMessageDialog(contentPane, "Se agrego correctamente");
 				}
-				else {
-					venta.setPago("Contado");
-				}
-				venta.setPrecio(Double.parseDouble(tfPrecio.getText()));
-				venta.setTotal(Double.parseDouble(tfTotal.getText()));
-				
-				ventas.add(venta);
-				
-				JOptionPane.showMessageDialog(contentPane, "Se agrego correctamente");
 			}
 		});
 		btnAgregar.setBounds(191, 216, 89, 23);
@@ -226,6 +222,27 @@ public class Ventas extends JFrame {
 	public void vaciarConCombo() {
 		tfTotal.setText("");
 		spCantidad.setValue(0);
+	}
+	
+	public void calcular() {
+		double precio = Double.parseDouble(tfPrecio.getText());
+		int cantidad = Integer.parseInt(spCantidad.getValue().toString());
+		if (!verificarVacios()) {
+			if (cantidad != 0) {
+				double total = precio*cantidad;
+				if (radioContado.isSelected()) {
+					total = total - (total * 0.1);
+				}
+				else {
+					total = total + (total * 0.1);
+				}
+				tfTotal.setText(String.valueOf(total));
+			}
+		}
+	}
+	
+	public void setVentas(List<Venta> ventas) {
+		this.ventas = ventas;
 	}
 	
 }
