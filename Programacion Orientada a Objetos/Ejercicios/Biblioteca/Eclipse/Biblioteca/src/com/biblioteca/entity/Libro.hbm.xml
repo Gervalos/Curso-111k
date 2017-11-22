@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-mapping package="com.biblioteca.entity">
+	<class name="Libro" table="Libro">
+		<id name="idLibro" column="idLibro">
+			<generator class="native"/>
+		</id>
+		<property name="nombre" type="string"/>
+		<property name="descripcion" type="string"/>
+		<property name="nro_paginas" type="integer"/>
+		<many-to-one name="Autor" class="com.biblioteca.entity.Autor"
+            column="idAutor" unique="true" not-null="true" cascade="all" />
+	</class>
+</hibernate-mapping>

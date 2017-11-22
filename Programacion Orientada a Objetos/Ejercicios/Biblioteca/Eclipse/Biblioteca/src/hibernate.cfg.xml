@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-configuration>
+	<session-factory>
+		<!-- Configuracion de conexion a la base de datos -->
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<!-- Ubicacion de la base de datos -->
+		<property name="connection.url">jdbc:mysql://127.0.0.1:3306/Biblio</property>
+		<!-- Usuario de la base de datos -->
+		<property name="connection.username">root</property>
+		<!-- Clave de la base de datos -->
+		<property name="connection.password">root</property>
+		<!-- Dialecto SQL -->
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<!-- Mostrar operaciones en consola -->
+		<property name="show_sql">true</property>
+		<!-- Mapping basado en XML -->
+		
+		<mapping resource="com/biblioteca/entity/Autor.hbm.xml"/>
+		<mapping resource="com/biblioteca/entity/Libro.hbm.xml"/>
+	</session-factory>
+</hibernate-configuration>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-mapping package="com.biblioteca.entity">
+	<class name="Autor" table="Autor">
+		<id name="idAutor" column="idAutor">
+			<generator class="native"/>
+		</id>
+		<property name="nombre" type="string"/>
+		<property name="apellido" type="string"/>
+		<property name="edad" type="integer"/>
+	</class>
+</hibernate-mapping>
